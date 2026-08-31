@@ -45,9 +45,19 @@ function modificaLivro(modificacoes, id) {
   return conteudoMudado;
 }
 
+function excluirLivro(id) {
+  let livros = readJson();
+
+  const livrosFiltrados = livros.filter((livro) => String(livro.id) !== id);
+
+  writeJson(livrosFiltrados);
+  return livrosFiltrados;
+}
+
 module.exports = {
   getTodosLivros,
   getLivroPorId,
   insereLivro,
   modificaLivro,
+  excluirLivro,
 };

@@ -3,6 +3,7 @@ const {
   getLivroPorId,
   insereLivro,
   modificaLivro,
+  excluirLivro,
 } = require("../servicos/s-livros");
 
 function getLivros(req, res) {
@@ -60,8 +61,25 @@ function patchLivro(req, res) {
     res.send(modificado);
   } catch {
     res.status(500);
-    
+
     res.send({ error: "Erro ao modificar livro" });
+  }
+}
+
+function deleteLivro(req, res) {
+  try {
+    const id = req.params.id;
+
+    const removido = excluirLivro(id);
+
+    if (!removido)
+      return res.status(404).send({ error: "Livro não encontrado" });
+
+    res.send(removido);
+  } catch {
+    res.status(500);
+
+    res.send({ error: "Erro ao deletar livro" });
   }
 }
 
@@ -70,4 +88,5 @@ module.exports = {
   getLivro,
   postLivro,
   patchLivro,
+  deleteLivro,
 };
