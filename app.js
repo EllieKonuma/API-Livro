@@ -2,10 +2,11 @@ const express = require("express");
 const rotaLivro = require("./rotas/r-livro");
 
 const app = express();
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("ola bry");
-});
+// app.get("/", (req, res) => {
+//   res.send("ola bry");
+// });
 
 app.use("/livros", rotaLivro);
 
