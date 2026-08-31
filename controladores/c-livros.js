@@ -4,11 +4,12 @@ const {
   insereLivro,
   modificaLivro,
   excluirLivro,
-} = require("../servicos/s-livros");
+} = require("../servicos/DEPRECADOs-livros");
 
 function getLivros(req, res) {
   try {
-    const livros = getTodosLivros();
+    // const livros = getTodosLivros();
+    const livros = req.livroService.getTodosLivros();
 
     res.send(livros);
   } catch (error) {
@@ -22,7 +23,7 @@ function getLivro(req, res) {
   try {
     const id = req.params.id;
 
-    const livro = getLivroPorId(id);
+    const livro = req.livroService.getLivroPorId(id);
 
     res.send(livro);
   } catch (error) {
@@ -34,7 +35,10 @@ function getLivro(req, res) {
 
 function postLivro(req, res) {
   try {
-    const livroInserido = insereLivro(req.body);
+    if (!req.body.name) throw new Error("Missing name");
+    const body = { name: req.body.name };
+
+    const livroInserido = req.livroService.insereLivro(req.body);
 
     res.status(201);
 
@@ -52,14 +56,15 @@ function patchLivro(req, res) {
 
     const body = req.body;
 
-    const modificado = modificaLivro(body, id);
+    const modificado = req.livroService.modificaLivro(body, id);
 
     if (!modificado) {
       return res.status(404).send({ error: "Livro não encontrado" });
     }
 
     res.send(modificado);
-  } catch {
+  } catch (error) {
+    console.log(error);
     res.status(500);
 
     res.send({ error: "Erro ao modificar livro" });
@@ -70,7 +75,7 @@ function deleteLivro(req, res) {
   try {
     const id = req.params.id;
 
-    const removido = excluirLivro(id);
+    const removido = req.livroService.excluirLivro(id);
 
     if (!removido)
       return res.status(404).send({ error: "Livro não encontrado" });
